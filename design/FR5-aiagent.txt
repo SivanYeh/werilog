@@ -1,0 +1,19 @@
+@startuml
+title FR5: AI Design Assistant
+
+skinparam style strictuml
+
+class Sys
+' Adding a note for your HK constraint
+class "LLM Agent" as LLMAgent << (M,#FF7700) lightweight >>
+note left of LLMAgent : MK -> light weight\nLLM agent
+
+class "Verilog Snippets" as Snippets
+class "XPU comp / Auto Complete" as AutoComplete
+
+' Relationships
+Sys -> LLMAgent : "interface"
+LLMAgent --> Snippets : "suggest"
+LLMAgent --> AutoComplete
+
+@enduml
