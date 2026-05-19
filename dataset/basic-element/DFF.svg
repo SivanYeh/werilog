@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
+       id="rect12"
+       width="34.404484"
+       height="34.404484"
+       x="80.036667"
+       y="95.911667" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
+       id="path13"
+       d="m 107.15564,95.149902 -7.525979,4.345127 v -8.690254 z"
+       transform="matrix(1.2154375,0,0,1.2154375,-41.028396,5.259917)" />
+    <text
+       xml:space="preserve"
+       style="font-size:8.81944px;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.655107;stroke-dasharray:none;stroke-opacity:1"
+       x="105.24098"
+       y="123.93172"
+       id="text16"><tspan
+         id="tspan16"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, @wght=300,wdth=87';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 87, 'wght' 300;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke-width:0.65511"
+         x="105.24098"
+         y="123.93172">Q'</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:8.81944px;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.655107;stroke-dasharray:none;stroke-opacity:1"
+       x="104.93033"
+       y="108.05527"
+       id="text16-9"><tspan
+         id="tspan16-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, @wght=300,wdth=87';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 87, 'wght' 300;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke-width:0.65511"
+         x="104.93033"
+         y="108.05527">Q</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:8.81944px;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.655107;stroke-dasharray:none;stroke-opacity:1"
+       x="84.757851"
+       y="108.48008"
+       id="text16-0"><tspan
+         id="tspan16-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift, @wght=300,wdth=87';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 87, 'wght' 300;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke-width:0.65511"
+         x="84.757851"
+         y="108.48008">D</tspan></text>
+  </g>
+</svg>

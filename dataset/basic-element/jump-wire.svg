@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <path
+       id="path17"
+       style="font-variation-settings:'wdth' 87, 'wght' 300;fill:#ffffff;stroke:#000000;stroke-width:0.264999"
+       d="m 99.83571,133.577 c 3.21899,0 5.8285,2.6095 5.8285,5.82849 0,3.21899 -2.60951,5.8285 -5.8285,5.8285" />
+    <g
+       id="path18"
+       transform="translate(-38.75884,-27.847067)">
+      <path
+         style="font-variation-settings:'wdth' 87, 'wght' 300;baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;enable-background:accumulate;stop-color:#000000;stop-opacity:1"
+         d="m 138.99702,147.35964 0.1267,39.27901"
+         id="path19" />
+      <path
+         style="font-variation-settings:'wdth' 87, 'wght' 300;baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;enable-background:accumulate;stop-color:#000000;stop-opacity:1"
+         d="m 138.94796,172.95369 0.0442,13.68498 -0.12696,-39.2793 0.0446,13.81156"
+         id="path20" />
+    </g>
+    <path
+       style="font-variation-settings:'wdth' 87, 'wght' 300;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
+       d="m 99.35123,102.66061 0.53153,30.85169 m 0.11454,11.64534 0.11416,11.60664 0.12671,20.39974"
+       id="path21" />
+  </g>
+</svg>
