@@ -1,7 +1,7 @@
 module Transmitter (
-    output wire data_out
+    output wire out1
 );
-    assign data_out = 1'b1; // Constantly sends a high signal
+    assign out1 = 1'b1; // Constantly sends a high signal
 endmodule
 
 module Receiver(
@@ -20,14 +20,14 @@ module Top_Level (
 
     // 2. Instantiate the Transmitter
     // Syntax: ModuleName InstanceName (.port_name(signal_name))
-    Transmitter u1 (
-        .data_out(intermediate_connection)
+    Transmitter Mod1 (
+        .out1(intermediate_connection)
     );
 
     // 3. Instantiate the Receiver
-    Receiver u2 (
-        .data_in(intermediate_connection),
-        .result(final_output)
+    Receiver Mod2 (
+        .in1(intermediate_connection),
+        .out1(final_output)
     );
 
 endmodule
