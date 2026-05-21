@@ -16,7 +16,7 @@ Each circuit module is represented as a `node` data structure and contains five 
 
 If the node `type` is not `module`, the `op` field can be omitted.
 
-If the node `type` is `wire`, the `name` field can be omitted.
+If the node `type` is `wire`,`bool` or `selector`, the `name` field can be omitted.
 
 ## Node names
 Each node should have a unique name.
