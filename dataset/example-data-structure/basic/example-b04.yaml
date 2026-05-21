@@ -1,14 +1,17 @@
 type: module
 name: Mod1
-in: [in1, in2, in3]
-out: [out1, out2, out3, out4]
+in: [Mod1.in1, Mod1.in2, Mod1.in3]
+out: [Mod1.out1, Mod1.out2, Mod1.out3, Mod1.out4]
 op: 
   - type: wire
     in: [Mod1.in1]
     out: [Mod1.out1]
   - type: wire
     in: [Mod1.in2]
-    out: [Mod1.out2, Mod1.out3]
+    out: [Mod1.out2]
+  - type: wire
+    in: [Mod1.in2]
+    out: [Mod1.out3]
   - type: wire
     in: [Mod1.in3]
     out: [Mod1.out4]

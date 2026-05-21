@@ -1,11 +1,13 @@
 type: module
 name: Mod1
-in: [a, b]
-out: [out_assign, out_alwaysblock]
+in: [Mod1.a, Mod1.b]
+out: [Mod1.out_assign, Mod1.out_alwaysblock]
 op:
   - type: and
+    name: And1
     in: [Mod1.a, Mod1.b]
     out: [Mod1.out_assign]
   - type: and
+    name: And2
     in: [Mod1.a, Mod1.b]
     out: [Mod1.out_alwaysblock]
