@@ -1,22 +1,20 @@
 type: module
 name: Top_Level
 in: []
-out: [final_output]
+out: [Top_Level.final_output]
 op:
   - type: module
     name: Mod1
     in: []
-    out: [out1]
-    op:
-      - type: wire
-        in: [1b]
-        out: [Mod1.out1]
+    out: [Mod1.out1]
+    op: []
   - type: module
     name: Mod2
-    in: [in1]
-    out: [out1]
+    in: [Mod2.in1]
+    out: [Mod2.out1]
     op:
       - type: invert # it isn't invert, its' buffer with invert
+        name: Inv1 
         in: [Mod2.in1]
         out: [Mod2.out1]
   - type: wire

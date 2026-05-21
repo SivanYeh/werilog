@@ -1,0 +1,13 @@
+type: module
+name: Mod1
+in: [Mod1.a, Mod1.b]
+out: [Mod1.out1]
+op:
+  - type: invert
+    name: Inv1
+    in: [Mod1.b]
+    out: [Mod1.__1]
+  - type: and
+    name: And1
+    in: [Mod1.a, Mod1.__1]
+    out: [Mod1.out1]

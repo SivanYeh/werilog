@@ -1,7 +1,7 @@
 type: module
 name: Mod1
-in: [in]
-out: [out]
+in: [Mod1.in]
+out: [Mod1.out]
 op: 
   - type: wire
     in: [Mod1.in]

@@ -1,0 +1,9 @@
+type: module
+name: Mod1
+in: [Mod1.a, Mod1.b]
+out: [Mod1.out1]
+op:
+  - type: xnor
+    name: Xnor1
+    in: [Mod1.a, Mod1.b]
+    out: [Mod1.out1]
