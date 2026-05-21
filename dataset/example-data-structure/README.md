@@ -44,8 +44,25 @@ Signal names should be written in the following format:
 ```text
 ModuleName.SignalName
 ```
-
 If an internal signal does not have a name in the circuit SVG file, use a temporary label such as `__1`, `__2`, etc.
+
+## Signal Width
+
+If a signal has more than one bit, use the `bit` field to describe its bit width.
+
+For a 1-bit signal, the signal can be written as a string:
+
+```yaml
+in: [Mod1.clk, Mod1.rst]
+```
+
+For a multi-bit signal, write the signal as an object with `name` and `bit`:
+
+```yaml
+in:
+  - name: Mod1.data
+    bit: 100
+```
 
 ## Operation Rule
 
