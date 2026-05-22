@@ -1,42 +1,42 @@
 type: module
 name: Mod1
-in: [Mod1.a, Mod1.b, Mod1.sel_b1, Mod1.sel_b2]
-out: [Mod1.out_assign, Mod1.out_always]
+in: [a, b, sel_b1, sel_b2]
+out: [out_assign, out_always]
 op:
   - type: and
     name: And1
-    in: [Mod1.sel_b1, Mod1.sel_b2]
-    out: [Mod1.__1]
+    in: [sel_b1, sel_b2]
+    out: [__1]
   - type: and
     name: And2
-    in: [Mod1.sel_b1, Mod1.sel_b2]
-    out: [Mod1.__2]
+    in: [sel_b1, sel_b2]
+    out: [__2]
   - type: multiplexer
     name: Mux1
-    in: [Mod1.__1, Mod1.a, Mod1.b]
-    out: [Mod1.out_assign]
+    in: [__1, a, b]
+    out: [out_assign]
     op:
       - type: bool
-        in: [Mod1.a]
+        in: [a]
         out: [0]
       - type: bool
-        in: [Mod1.b]
+        in: [b]
         out: [1]
       - type: selector
-        in: [Mod1.__1]
-        out: [Mod1.out_assign]
+        in: [__1]
+        out: [out_assign]
   - type: multiplexer
     name: Mux2
-    in: [Mod1.__2, Mod1.a, Mod1.b]
-    out: [Mod1.out_always]
+    in: [__2, a, b]
+    out: [out_always]
     op:
       - type: bool
-        in: [Mod1.a]
+        in: [a]
         out: [0]
       - type: bool
-        in: [Mod1.b]
+        in: [b]
         out: [1]
       - type: selector
-        in: [Mod1.__2]
-        out: [Mod1.out_always]
+        in: [__2]
+        out: [out_always]
   
