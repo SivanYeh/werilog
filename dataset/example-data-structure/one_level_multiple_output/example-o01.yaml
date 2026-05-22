@@ -1,38 +1,38 @@
 type: module
 name: Mod1
-in: [Mod1.in1, Mod1.in2]
-out: [Mod1.out1, Mod1.out2, Mod1.out3, Mod1.out4, Mod1.out5, Mod1.out6, Mod1.out7]
+in: [in1, in2]
+out: [out1, out2, out3, out4, out5, out6, out7]
 op:
   - type: and
     name: And1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out1]
+    in: [in1, in2]
+    out: [out1]
   - type: or
     name: Or1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out2]
+    in: [in1, in2]
+    out: [out2]
   - type: xor
     name: Xor1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out3]
+    in: [in1, in2]
+    out: [out3]
   - type: nand
     name: Nand1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out4]
+    in: [in1, in2]
+    out: [out4]
   - type: nor
     name: Nor1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out5]
+    in: [in1, in2]
+    out: [out5]
   - type: xnor
     name: Xnor1
-    in: [Mod1.in1, Mod1.in2]
-    out: [Mod1.out6]
+    in: [in1, in2]
+    out: [out6]
   - type: invert
     name: Inv1
-    in: [Mod1.in2]
-    out: [Mod1.__1]
+    in: [in2]
+    out: [__1]
   - type: and
     name: And2
-    in: [Mod1.in1, Mod1.__1]
-    out: [Mod1.out7]
+    in: [in1, __1]
+    out: [out7]
 
