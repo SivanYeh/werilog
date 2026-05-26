@@ -1,4 +1,4 @@
-module top_module( 
+module gt_Mod1( 
     input in1, input in2,
     output out1,
     output out2,
@@ -6,7 +6,7 @@ module top_module(
     output out4,
     output out5,
     output out6,
-    output out7,
+    output out7
 );
     assign out1 = in1 & in2;
     assign out2 = in1 | in2;

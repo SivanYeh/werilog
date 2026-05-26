@@ -21,7 +21,7 @@ If the node `type` is `wire`,`bool` or `selector`, the `name` field can be omitt
 ## Node names
 Each node should have a unique name.
 
-If the node name is not explicitly defined in the circuit, use the following naming rule:
+If the node already has a name in the circuit SVG file, use that name directly. If the node name is not explicitly defined in the circuit SVG file, use the following naming rule:
 
 ```text
 object type acronym + number label
@@ -36,15 +36,13 @@ Mod1
 Inv1
 ```
 
-## Names
+## Port Names
 
-Every component, including nodes and I/O signals, should be assigned to the smallest containing `module`.
+Every port should be assigned to correspond `node`.
 
-Each component should have a unique `ComponentName` within its containing module. If the component already has a name in the circuit SVG file, use that name directly.
+If a port does not have a name in the circuit SVG file, use a temporary label such as `__1`, `__2`, etc.
 
-If a component does not have a name in the circuit SVG file, use a temporary label such as `__1`, `__2`, etc.
-
-Inside the assigned module, use local names only.
+Inside the assigned node, use local names only.
 
 ```text
 a
@@ -52,19 +50,10 @@ out
 __1
 ```
 
-When the component is referenced from outside the assigned module, add the module scope as a prefix.
+When a port is referenced from outside the assigned node, add the `NodeName` scope as a prefix.
 
 ```text
-ModuleName.ComponentName
-```
-
-For recursive module composition, scopes can be added repeatedly from outside to inside.
-
-```text
-a
-Mod1.a
-Mod2.Mod1.a
-Top.Mod2.Mod1.a
+NodeName.ComponentName
 ```
 
 ## Signal Width
