@@ -11,7 +11,7 @@ module Receiver(
     assign result = ~data_in; // Inverts the received signal
 endmodule
 
-module Top_Level (
+module gt_Top_Level (
     output wire final_output
 );
 
@@ -26,8 +26,8 @@ module Top_Level (
 
     // 3. Instantiate the Receiver
     Receiver Mod2 (
-        .in1(intermediate_connection),
-        .out1(final_output)
+        .data_in(intermediate_connection),
+        .result(final_output)
     );
 
 endmodule
