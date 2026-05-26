@@ -1,0 +1,16 @@
+module Mod1 (
+    input in1,
+    input in2,
+    input in3,
+    output out1,
+    output out2,
+    output out3,
+    output out4
+);
+
+    assign out1 = in1;
+    assign out2 = in2;
+    assign out3 = in2;
+    assign out4 = in3;
+
+endmodule
