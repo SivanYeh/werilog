@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.filedialog import askopenfilename
 import re
 import threading
 from abc import ABC, abstractmethod
@@ -6,6 +7,8 @@ from werilog.agent.autocomplete import VerilogAgent
 from werilog.editor.draw_strategy import JumpWireStrategy, SquareWireStrategy, StraightWireStrategy
 from werilog.editor.extractverilog import VerilogModule, ModuleInstance, Port, Element, Wire, extract_verilog
 from werilog.editor.error_detector import VerilogSyntaxErrorDetector
+
+from werilog.agent.diagram_analyzer import DiagramAnalyzer
 
 # --- Config Parsing Helper (Mirroring display.py load_config) ---
 def load_config_yaml():
@@ -672,6 +675,9 @@ class HDLEditorApp(tk.Tk):
         
         self.export_btn = tk.Button(self.toolbar_frame, text="Export SVG", command=self.export_svg)
         self.export_btn.pack(side=tk.RIGHT, padx=5, pady=2)
+
+        self.export_btn = tk.Button(self.toolbar_frame, text="Import PNG", command=self.import_png)
+        self.export_btn.pack(side=tk.LEFT, padx=5, pady=2)
         
         # Error Panel Frame at the bottom
         self.error_frame = tk.Frame(self, bg="#252526")
@@ -965,6 +971,18 @@ class HDLEditorApp(tk.Tk):
                     
                     self.update_hdl_from_state()
                     self.draw_diagram()
+
+    def import_png(self):
+        print("Importing PNG image.")
+        filename = askopenfilename()
+        with DiagramAnalyzer() as analyzer:
+            ds = analyzer.call_agent(
+            image_path=filename,
+            max_new_tokens=8192
+        )
+
+        print(ds)
+        # TODO convert `ds` into verilog syntax
 
     def export_svg(self):
         try:

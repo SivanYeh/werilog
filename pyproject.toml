@@ -11,6 +11,10 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "requests>=2.34.2",
     "transformers>=4.30.0",
+    "Pillow",
+    "torch",
+    "torchvision",
+    "accelerate"
 ]
 
 [dependency-groups]
