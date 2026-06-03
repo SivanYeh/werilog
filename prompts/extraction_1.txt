@@ -1,0 +1,110 @@
+Your task is to parse the diagram into a structured JSON representation describing: 
+1. visual elements,
+2. labels,
+3. connections between elements.
+
+Element types:
+- An ellipse represents either an input or an output.
+- An ellipse located to the left or top of a module is an input.
+- An ellipse located to the right or bottom of a module is an output.
+- A rectangle represents a module.
+- Rectangles can be nested, than a module includes a submodule.
+- Lines or arrows represent connections between inputs and outputs.
+
+Label rules:
+- Every visible label must be assigned to exactly one element.
+- Do not create a separate "text" element for a label if that label is already assigned to an input, output, or module.
+
+Module label rules:
+- Module labels must match one of these pattern: 
+    - ^Mod[A-Za-z0-9]+$
+    - ^Top_[A-Za-z0-9]+$
+- Examples: "Mod1", "Mod2", "ModA", "Mod12", "Top_Level"
+- A label starting with "Mod" or "Top" belongs only to one module.
+
+Input label rules:
+- Input labels must match one of these patterns:
+  - ^in[0-9]+$
+  - ^input[0-9]+$
+- Examples: "in1", "in2", "input1", "input2"
+- A label matching an input pattern belongs only to an input ellipse.
+- Do not assign an input label to a module or output ellipse.
+- Only module can have inputs and each input is assign to one module only. 
+
+Output label rules:
+- Output labels must match one of these patterns:
+  - ^out[0-9]+$
+  - ^o[0-9]+$
+  - ^[A-Za-z0-9]+[_]output$
+  - ^[A-Za-z0-9]+[_]out$
+- Examples: "out1", "out2", "o1", "o2", "final_output"
+- A label matching an output pattern belongs only to an output ellipse.
+- Do not assign an output label to a module or input ellipse.
+- Only module can have outputs and each output is assign to one module only.
+
+Connection rules:
+- A connection links a source element to a target element.
+- If an arrowhead is visible, use the arrow direction to determine source and target.
+- If no arrowhead is visible, infer direction from layout when possible.
+- If there is no visible connection between inputs and outputs, leave the input or output unconnected. Do not include such ports in the connections structure.
+
+Input and output rules:
+- Inputs connect to outputs only.
+- Outputs connect to inputs only.
+- Inputs or outputs do not need to be connected.
+
+Parent rules:
+- Each element has its parent which represnts the underlying element.
+- Inputs and outputs has underlying element module.
+- Modules have another module or null.
+- Examples: 
+    - element type: input with the label "in1" has its underlying element module, i.e., type: module,
+    - element type: output with the label "out1" has its underlying element module, i.e., type module,
+    - element type: module with the label Mod1 has its nested module element, i.e., type module.
+
+Extraction requirements:
+- Preserve the exact label text as it appears in the diagram.
+- Do not omit unlabeled or ambiguous elements; include them with type "unknown" and explain them in "unresolved".
+
+ID-prefix invariants:
+- Elements with type "input" must have IDs starting with "input_".
+- Elements with type "output" must have IDs starting with "output_".
+- Elements with type "module" must have IDs starting with "module_".
+- Assign IDs only after the final element type has been determined.
+- If an element type changes during reasoning, rename the ID to match the final type and update all connection references.
+
+
+Return only valid JSON.
+The JSON must be complete and syntactically valid.
+Do not stop until the final closing brace `}` is produced.
+Return only one JSON object, not a list and not Markdown.
+
+Use the following schema:
+
+{
+  "elements": [
+    {
+      "id": "string",
+      "type": "input | output | module | unknown",
+      "label": "string or null",
+      "bbox": [x1, y1, x2, y2],
+      "parent": element_id,
+      "confidence": 0.0
+    }
+  ],
+  "connections": [
+    {
+      "id": "string",
+      "source": "element_id or null",
+      "target": "element_id or null",
+      "confidence": 0.0
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "element | connection | label | direction",
+      "description": "string",
+      "related_ids": ["string"]
+    }
+  ]
+}
