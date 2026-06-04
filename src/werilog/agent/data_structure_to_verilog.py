@@ -5,12 +5,15 @@ import subprocess
 from google import genai
 from pathlib import Path
 from google.genai.errors import ClientError
+from dotenv import load_dotenv
 from tenacity import (
     retry,
     wait_fixed,
     stop_after_attempt,
-    retry_if_exception_type,
+    retry_if_exception,
 )
+
+load_dotenv()
 
 
 # Gemini api 1 min 5 request limit, so retry if hit the limit
@@ -26,17 +29,19 @@ def print_retry_info(retry_state):
 SLEEP_TIME = 30
 
 
+def is_retryable_error(exception):
+    return isinstance(exception, ClientError) and getattr(exception, 'code', 0) in (429, 500, 502, 503, 504)
+
 @retry(
     wait=wait_fixed(SLEEP_TIME),
     stop=stop_after_attempt(10),
-    retry=retry_if_exception_type(ClientError),
+    retry=retry_if_exception(is_retryable_error),
     reraise=True,
     before_sleep=print_retry_info,
 )
-def gen_verilog(path, count):
-    with open(path, "r") as file:
-        data_structure = file.read()
-
+def ds_string_to_verilog(data_structure: str) -> str:
+    api_key = os.environ.get("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
     prompt = f"""
     Please change the node datastructure to equivalent verilog code. Only output verilog code.
     {data_structure}
@@ -49,6 +54,14 @@ def gen_verilog(path, count):
     answer = response.text
     lines = answer.splitlines()
     final_answer = "\n".join(lines[1:-1])
+    return final_answer
+
+
+def gen_verilog(path, count):
+    with open(path, "r") as file:
+        data_structure = file.read()
+
+    final_answer = ds_string_to_verilog(data_structure)
 
     file_name = path.name
     dir_name = path.parent.name
@@ -56,7 +69,7 @@ def gen_verilog(path, count):
     file_path = dir_path / file_name
     new_file_path = file_path.with_suffix(".v")
 
-    dir_path.mkdir(exist_ok=True)
+    dir_path.mkdir(exist_ok=True, parents=True)
     new_file_path.touch(exist_ok=True)
 
     with open(new_file_path, "w") as f:
