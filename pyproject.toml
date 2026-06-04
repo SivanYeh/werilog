@@ -15,7 +15,8 @@ dependencies = [
     "torch",
     "torchvision",
     "accelerate",
-    "bitsandbytes"
+    "mlx>=0.31.2",
+    "mlx-vlm>=0.6.1",
 ]
 
 [dependency-groups]
