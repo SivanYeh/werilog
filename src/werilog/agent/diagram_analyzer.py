@@ -7,7 +7,7 @@ import torch
 import gc
 from io import BytesIO
 from PIL import Image
-from transformers import pipeline
+from transformers import pipeline, BitsAndBytesConfig
 from collections import defaultdict
 import yaml
 
@@ -375,10 +375,15 @@ def load_file(file_name: str) -> str:
 
 class DiagramAnalyzer:
     def __init__(self):
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16
+        )
         self.pipe = pipeline(
             "image-text-to-text",
             model="OpenGVLab/InternVL3-8B-hf",
             device_map="auto",
+            model_kwargs={"quantization_config": quantization_config},
         )
 
     def __enter__(self):

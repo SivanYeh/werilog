@@ -14,7 +14,8 @@ dependencies = [
     "Pillow",
     "torch",
     "torchvision",
-    "accelerate"
+    "accelerate",
+    "bitsandbytes"
 ]
 
 [dependency-groups]
