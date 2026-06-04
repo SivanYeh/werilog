@@ -4,7 +4,7 @@ import time
 import subprocess
 from google import genai
 from pathlib import Path
-from google.genai.errors import ClientError
+from google.genai.errors import APIError
 from dotenv import load_dotenv
 from tenacity import (
     retry,
@@ -30,7 +30,7 @@ SLEEP_TIME = 30
 
 
 def is_retryable_error(exception):
-    return isinstance(exception, ClientError) and getattr(exception, 'code', 0) in (429, 500, 502, 503, 504)
+    return isinstance(exception, APIError) and getattr(exception, 'code', 0) in (429, 500, 502, 503, 504)
 
 @retry(
     wait=wait_fixed(SLEEP_TIME),
