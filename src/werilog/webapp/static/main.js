@@ -991,6 +991,52 @@ document.addEventListener("DOMContentLoaded", () => {
             svg += `<rect x="${mod.box.x}" y="${mod.box.y}" width="${mod.box.w}" height="${mod.box.h}" rx="8" ry="8" class="mod-box" />`;
             svg += `<text x="${mod.box.x + mod.box.w/2}" y="${mod.box.y + mod.box.h - 15}" class="mod-text" text-anchor="middle">${escapeXml(mod.name)}</text>`;
 
+            mod.routed_wires.forEach(w => {
+                if (!w.path || w.path.length < 2) return;
+                let d = `M ${w.path[0][0]} ${w.path[0][1]}`;
+                for (let i = 0; i < w.path.length - 1; i++) {
+                    const p1 = w.path[i];
+                    const p2 = w.path[i+1];
+                    let segment_jumps = [];
+                    for (const jump of (w.jumps || [])) {
+                        const jx = jump[0], jy = jump[1];
+                        if (Math.abs(p1[0] - p2[0]) < 1) {
+                            const min_y = Math.min(p1[1], p2[1]);
+                            const max_y = Math.max(p1[1], p2[1]);
+                            if (min_y < jy && jy < max_y && Math.abs(p1[0] - jx) < 1) {
+                                segment_jumps.push({jx, jy, orient: "vertical"});
+                            }
+                        } else if (Math.abs(p1[1] - p2[1]) < 1) {
+                            const min_x = Math.min(p1[0], p2[0]);
+                            const max_x = Math.max(p1[0], p2[0]);
+                            if (min_x < jx && jx < max_x && Math.abs(p1[1] - jy) < 1) {
+                                segment_jumps.push({jx, jy, orient: "horizontal"});
+                            }
+                        }
+                    }
+                    if (segment_jumps.length > 0) {
+                        if (Math.abs(p1[0] - p2[0]) < 1) {
+                            const reverse = p1[1] > p2[1];
+                            segment_jumps.sort((a, b) => reverse ? b.jy - a.jy : a.jy - b.jy);
+                        } else {
+                            const reverse = p1[0] > p2[0];
+                            segment_jumps.sort((a, b) => reverse ? b.jx - a.jx : a.jx - b.jx);
+                        }
+                        for (const jump of segment_jumps) {
+                            if (jump.orient === "vertical") {
+                                const offset = p1[1] > p2[1] ? -6 : 6;
+                                d += ` L ${jump.jx} ${jump.jy - offset} A 6 6 0 0 1 ${jump.jx} ${jump.jy + offset}`;
+                            } else {
+                                const offset = p1[0] > p2[0] ? -6 : 6;
+                                d += ` L ${jump.jx - offset} ${jump.jy} A 6 6 0 0 1 ${jump.jx + offset} ${jump.jy}`;
+                            }
+                        }
+                    }
+                    d += ` L ${p2[0]} ${p2[1]}`;
+                }
+                svg += `<path d="${d}" class="wire" />`;
+            });
+
             mod.ports.forEach(p => {
                 svg += `<circle cx="${p.x}" cy="${p.y}" r="6" class="${p.direction === 'input' ? 'port-in' : 'port-out'}" />`;
                 const textX = p.direction === 'input' ? p.x - 12 : p.x + 12;
@@ -1018,15 +1064,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const textAnchor = p.direction === 'input' ? 'end' : 'start';
                     svg += `<text x="${textX}" y="${p.y + 4}" class="port-text" text-anchor="${textAnchor}">${escapeXml(p.name)}</text>`;
                 });
-            });
-
-            mod.routed_wires.forEach(w => {
-                if (!w.path || w.path.length < 2) return;
-                let d = `M ${w.path[0][0]} ${w.path[0][1]}`;
-                for (let i = 1; i < w.path.length; i++) {
-                    d += ` L ${w.path[i][0]} ${w.path[i][1]}`;
-                }
-                svg += `<path d="${d}" class="wire" />`;
             });
         });
 
