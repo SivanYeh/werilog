@@ -15,6 +15,9 @@ def main():
     # New editor command
     editor_parser = subparsers.add_parser("editor", help="Launch the Verilog Diagram Editor")
     
+    # New webapp command
+    webapp_parser = subparsers.add_parser("webapp", help="Launch the Verilog WebGL Application")
+    
     args = parser.parse_args()
 
     if args.command == "editor":
@@ -22,6 +25,10 @@ def main():
         from werilog.editor.tk_app import HDLEditorApp
         app = HDLEditorApp()
         app.mainloop()
+    elif args.command == "webapp":
+        print("Launching Verilog WebGL Application on http://127.0.0.1:8000 ...")
+        import uvicorn
+        uvicorn.run("werilog.webapp.server:app", host="127.0.0.1", port=8000, reload=True)
     elif args.command == "agent" or not args.command:
         print("Initializing AI Agent for Verilog Autocomplete (FR5)...")
         agent = VerilogAgent()

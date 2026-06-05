@@ -3,7 +3,7 @@ from tkinter.filedialog import askopenfilename
 import re
 import threading
 from abc import ABC, abstractmethod
-from werilog.agent.autocomplete import VerilogAgent
+from werilog.agent.core import VerilogAgent
 from werilog.editor.draw_strategy import JumpWireStrategy, SquareWireStrategy, StraightWireStrategy
 from werilog.editor.extractverilog import VerilogModule, ModuleInstance, Port, Element, Wire, extract_verilog
 from werilog.editor.error_detector import VerilogSyntaxErrorDetector

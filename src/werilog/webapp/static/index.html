@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verilog WebGL Prototype</title>
+    
+    <!-- PixiJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
+
+    <style>
+        body { margin: 0; display: flex; flex-direction: column; height: 100vh; background-color: #1e1e1e; color: #d4d4d4; font-family: 'Segoe UI', sans-serif;}
+        #top-bar { height: 40px; background-color: #333; display: flex; align-items: center; padding: 0 10px; justify-content: space-between; }
+        button { background-color: #0e639c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 2px; margin-left: 5px; }
+        button:hover { background-color: #1177bb; }
+        #main-area { display: flex; flex: 1; overflow: hidden; }
+        #left-panel { flex: 1; background-color: #1e1e24; position: relative; overflow: hidden; min-width: 100px; }
+        #right-panel { flex: 1; display: flex; flex-direction: column; min-width: 100px; }
+        #editor-container { flex: 1; }
+        #bottom-panel { height: 150px; background-color: #1e1e1e; display: flex; flex-direction: column; min-height: 30px; }
+        #bottom-panel .title { background: #252526; padding: 5px 10px; font-weight: bold; color: #d4d4d4;}
+        #log-output { flex: 1; background: #1e1e1e; color: #f44336; font-family: 'Courier New', Courier, monospace; padding: 10px; overflow-y: auto; white-space: pre-wrap;}
+        #diagram-container canvas { display: block; }
+        
+        /* Resizers */
+        .resizer-h { width: 6px; background-color: #333; cursor: col-resize; flex-shrink: 0; z-index: 10; transition: background-color 0.2s;}
+        .resizer-h:hover, .resizer-h:active { background-color: #0e639c; }
+        .resizer-v { height: 6px; background-color: #333; cursor: row-resize; flex-shrink: 0; z-index: 10; transition: background-color 0.2s;}
+        .resizer-v:hover, .resizer-v:active { background-color: #0e639c; }
+    </style>
+</head>
+<body>
+    <div id="top-bar">
+        <div style="font-weight: bold; color: #569cd6;">Verilog WebGL Prototype</div>
+        <div>
+            <input type="file" id="file-upload" accept=".v,.verilog" style="display:none;" />
+            <button onclick="document.getElementById('file-upload').click()">Upload Verilog</button>
+            <button id="btn-export">Export SVG</button>
+        </div>
+    </div>
+    <div id="main-area">
+        <div id="left-panel">
+            <div id="zoom-controls" style="position: absolute; right: 10px; top: 10px; z-index: 10; display: flex; gap: 5px;">
+                <button id="btn-zoom-in" style="padding: 2px 8px;">+</button>
+                <button id="btn-zoom-out" style="padding: 2px 8px;">-</button>
+                <button id="btn-zoom-reset" style="padding: 2px 8px;">100%</button>
+            </div>
+            <div id="diagram-container" style="width: 100%; height: 100%; overflow: hidden;"></div>
+        </div>
+        <div id="resizer-h" class="resizer-h"></div>
+        <div id="right-panel">
+            <div id="editor-container"></div>
+        </div>
+    </div>
+    <div id="resizer-v" class="resizer-v"></div>
+    <div id="bottom-panel">
+        <div class="title">Syntax Logs & Agent</div>
+        <div id="log-output"></div>
+    </div>
+
+    <!-- Require.js for Monaco -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+    
+    <!-- Resizer Logic -->
+    <script>
+        const resizerH = document.getElementById('resizer-h');
+        const leftPanel = document.getElementById('left-panel');
+        const rightPanel = document.getElementById('right-panel');
+
+        let isResizingH = false;
+        resizerH.addEventListener('mousedown', function(e) {
+            isResizingH = true;
+            document.body.style.cursor = 'col-resize';
+            leftPanel.style.pointerEvents = 'none';
+            rightPanel.style.pointerEvents = 'none';
+        });
+
+        const resizerV = document.getElementById('resizer-v');
+        const bottomPanel = document.getElementById('bottom-panel');
+        const mainArea = document.getElementById('main-area');
+
+        let isResizingV = false;
+        resizerV.addEventListener('mousedown', function(e) {
+            isResizingV = true;
+            document.body.style.cursor = 'row-resize';
+            mainArea.style.pointerEvents = 'none';
+            bottomPanel.style.pointerEvents = 'none';
+        });
+
+        window.addEventListener('mousemove', function(e) {
+            if (isResizingH) {
+                const totalWidth = mainArea.getBoundingClientRect().width;
+                // Calculate new flex-basis for left panel
+                let newLeftWidth = (e.clientX / totalWidth) * 100;
+                if (newLeftWidth < 5) newLeftWidth = 5;
+                if (newLeftWidth > 95) newLeftWidth = 95;
+                leftPanel.style.flex = `0 0 ${newLeftWidth}%`;
+                rightPanel.style.flex = `1 1 0%`; // let right panel take the rest
+            }
+            if (isResizingV) {
+                const containerHeight = document.body.getBoundingClientRect().height;
+                const topBarHeight = document.getElementById('top-bar').getBoundingClientRect().height;
+                // Height from bottom
+                let newBottomHeight = containerHeight - e.clientY;
+                if (newBottomHeight < 30) newBottomHeight = 30;
+                if (newBottomHeight > containerHeight - topBarHeight - 50) newBottomHeight = containerHeight - topBarHeight - 50;
+                
+                bottomPanel.style.height = `${newBottomHeight}px`;
+            }
+        });
+
+        window.addEventListener('mouseup', function(e) {
+            if (isResizingH || isResizingV) {
+                isResizingH = false;
+                isResizingV = false;
+                document.body.style.cursor = '';
+                leftPanel.style.pointerEvents = '';
+                rightPanel.style.pointerEvents = '';
+                mainArea.style.pointerEvents = '';
+                bottomPanel.style.pointerEvents = '';
+            }
+        });
+    </script>
+    
+    <!-- Main Application Logic -->
+    <script src="main.js?v=2"></script>
+</body>
+</html>
