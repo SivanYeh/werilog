@@ -1,0 +1,15 @@
+networkx
+lxml
+pydantic
+pyyaml
+json
+argparse
+
+torch
+transformers
+torchvision
+accelerate
+# wheel
+# setuptools
+# flash-attn
+# qwen-vl-utils[decord]==0.0.8

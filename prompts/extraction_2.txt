@@ -1,0 +1,151 @@
+Your task is to parse the diagram into a structured JSON representation describing: 
+1. visual elements,
+2. labels,
+3. connections between elements.
+
+Element types:
+- An ellipse represents either an input or an output.
+- An ellipse located to the left or top of a module is an input.
+- An ellipse located to the right or bottom of a module is an output.
+- A rectangle represents a module.
+- Rectangles can be nested, than a module includes a submodule.
+- Lines or arrows represent connections between inputs and outputs.
+
+Label rules:
+- Every visible label must be assigned to exactly one element.
+- Do not create a separate "text" element for a label if that label is already assigned to an input, output, or module.
+
+Module label rules:
+- Module labels must match one of these pattern: 
+    - ^Mod[A-Za-z0-9]+$
+    - ^Top_[A-Za-z0-9]+$
+- Examples: "Mod1", "Mod2", "ModA", "Mod12", "Top_Level"
+- A label starting with "Mod" or "Top" belongs only to one module.
+
+Input label rules:
+- Input labels must match one of these patterns:
+  - ^in[0-9]+$
+  - ^input[0-9]+$
+- Examples: "in1", "in2", "input1", "input2"
+- A label matching an input pattern belongs only to an input ellipse.
+- Do not assign an input label to a module or output ellipse.
+- Only module can have inputs and each input is assign to one module only. 
+
+Output label rules:
+- Output labels must match one of these patterns:
+  - ^out[0-9]+$
+  - ^o[0-9]+$
+  - ^[A-Za-z0-9]+[_]output$
+  - ^[A-Za-z0-9]+[_]out$
+- Examples: "out1", "out2", "o1", "o2", "final_output"
+- A label matching an output pattern belongs only to an output ellipse.
+- Do not assign an output label to a module or input ellipse.
+- Only module can have outputs and each output is assign to one module only.
+
+Connection rules:
+- Connections must be extracted only from visible connector lines or arrows.
+- Do not infer a connection from the existence of an input and an output in the same module.
+- Do not infer a connection from the YAML-like semantics of the diagram.
+- Do not infer a connection from the parent relationship.
+- Do not infer a connection from port placement.
+- Do not infer a connection because an input and output have the same parent module.
+
+Valid connection evidence:
+- A connection exists only if there is a distinct visible line or arrow whose purpose is to connect two ports.
+- The connector line must be visually separate from the module rectangle border.
+- The connector line must not be part of a rectangle boundary.
+- The connector line must not be merely the side, top, bottom, or corner of a module rectangle.
+- The connector line must have endpoints that touch, enter, or clearly point to input/output ellipses.
+
+Invalid connection evidence:
+- A module border touching an input or output ellipse is not a connection.
+- A port attached to a module boundary is not a connection.
+- A rectangle side passing through or near a port is not a connection.
+- A rectangle top, bottom, left side, or right side is not a connection.
+- A line segment that is part of the module outline must never be used as a connection.
+- Ports with the same parent module are not automatically connected.
+- An input and output inside the same module are not automatically connected.
+
+Port ownership:
+- Inputs and outputs are ports owned by modules.
+- Port ownership is represented only by the "parent" field.
+- Do not represent ownership as a connection.
+- Do not create a connection between a module and its own ports.
+- Do not create a connection between two ports only because they belong to the same module.
+
+Valid endpoint types:
+- Only inputs and outputs may be used as connection endpoints.
+- Modules must never appear as source or target.
+- Unknown elements must not be used as source or target unless there is no better alternative.
+
+Valid data-flow direction:
+- A connected output may connect to an input.
+- A connected input may connect to an output only if the arrow direction clearly indicates that direction.
+- If no arrowhead is visible, infer direction only when there is a distinct connector line between two ports.
+- If there is no distinct connector line, do not create a connection.
+
+Unconnected ports:
+- Inputs and outputs may be unconnected.
+- Unconnected ports must still be extracted as elements.
+- A port with no visible connector line must not appear in "connections".
+- If a module has one input and one output but no visible connector line between them, "connections" must be empty.
+
+
+Parent rules:
+- Each element has a "parent" field.
+- For inputs and outputs, "parent" is the ID of the module that owns the port.
+- For nested modules, "parent" is the ID of the enclosing module.
+- For top-level modules, "parent" is null.
+- Parent-child ownership is not a connection.
+- Do not duplicate parent-child ownership in the "connections" list.
+- Examples: 
+    - element type: input with the label "in1" has its underlying element module, i.e., type: module,
+    - element type: output with the label "out1" has its underlying element module, i.e., type module,
+    - element type: module with the label Mod1 has its nested module element, i.e., type module.
+
+Extraction requirements:
+- Preserve the exact label text as it appears in the diagram.
+- Do not omit unlabeled or ambiguous elements; include them with type "unknown" and explain them in "unresolved".
+
+ID-prefix invariants:
+- Elements with type "input" must have IDs starting with "input_".
+- Elements with type "output" must have IDs starting with "output_".
+- Elements with type "module" must have IDs starting with "module_".
+- Assign IDs only after the final element type has been determined.
+- If an element type changes during reasoning, rename the ID to match the final type and update all connection references.
+
+
+Return only valid JSON.
+The JSON must be complete and syntactically valid.
+Do not stop until the final closing brace `}` is produced.
+Return only one JSON object, not a list and not Markdown.
+
+Use the following schema:
+
+{
+  "elements": [
+    {
+      "id": "string",
+      "type": "input | output | module | unknown",
+      "label": "string or null",
+      "bbox": [x1, y1, x2, y2],
+      "parent": element_id,
+      "confidence": 0.0
+    }
+  ],
+  "connections": [
+    {
+      "id": "string",
+      "source": "element_id or null",
+      "target": "element_id or null",
+      "confidence": 0.0
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "element | connection | label | direction",
+      "description": "string",
+      "related_ids": ["string"]
+    }
+  ]
+}

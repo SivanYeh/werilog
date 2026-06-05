@@ -4,5 +4,5 @@ in: [in]
 out: [out]
 op: 
   - type: wire
-    in: [in]
-    out: [out]
+    in: [Mod1.in]
+    out: [Mod1.out]

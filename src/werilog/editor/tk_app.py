@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.filedialog import askopenfilename
 import re
 import threading
 from abc import ABC, abstractmethod
@@ -8,6 +9,7 @@ from werilog.editor.extractverilog import VerilogModule, ModuleInstance, Port, E
 from werilog.editor.error_detector import VerilogSyntaxErrorDetector
 
 from werilog.agent.diagram_analyzer import DiagramAnalyzer
+
 from werilog.agent.data_structure_to_verilog import ds_string_to_verilog
 # --- Config Parsing Helper (Mirroring display.py load_config) ---
 def load_config_yaml():
@@ -674,6 +676,9 @@ class HDLEditorApp(tk.Tk):
         
         self.export_btn = tk.Button(self.toolbar_frame, text="Export SVG", command=self.export_svg)
         self.export_btn.pack(side=tk.RIGHT, padx=5, pady=2)
+
+        self.export_btn = tk.Button(self.toolbar_frame, text="Import PNG", command=self.import_png)
+        self.export_btn.pack(side=tk.LEFT, padx=5, pady=2)
         
         # Error Panel Frame at the bottom
         self.error_frame = tk.Frame(self, bg="#252526")
@@ -980,6 +985,8 @@ class HDLEditorApp(tk.Tk):
         )
 
         print(ds)
+        # TODO convert `ds` into verilog syntax
+
         verilog_code = ds_string_to_verilog(ds)
         
         # Append to text editor (or overwrite)
