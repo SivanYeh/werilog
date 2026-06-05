@@ -110,7 +110,8 @@ class ModuleInstance(Component):
             "type": "instance",
             "module_type": self.module_type,
             "name": self.name,
-            "connections": self.connections
+            "connections": self.connections,
+            "ports": [p.to_dict() for p in self.ports]
         }
 
     def to_verilog(self):
