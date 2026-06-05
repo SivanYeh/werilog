@@ -1,0 +1,13 @@
+type: module
+name: Mod1
+in: [in1, in2, in3]
+out: [out1]
+op:
+  - type: xnor
+    name: Xnor1
+    in: [in1, in2]
+    out: [__1]
+  - type: xor
+    name: Xor1
+    in: [__1, in3]
+    out: [out1]

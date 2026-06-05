@@ -1,4 +1,4 @@
-module Mod1( 
+module gt_Mod1( 
     input [99:0] in1,
     input [99:0] in2, 
     input sel1,

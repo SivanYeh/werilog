@@ -1,0 +1,9 @@
+type: module
+name: Mod1
+in: [a]
+out: [out1]
+op:
+  - type: buffer
+    name: Buf1
+    in: [a]
+    out: [out1]
