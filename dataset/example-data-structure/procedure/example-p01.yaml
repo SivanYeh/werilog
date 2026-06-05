@@ -4,8 +4,10 @@ in: [a, b]
 out: [out_assign, out_alwaysblock]
 op:
   - type: and
-    in: [Mod1.a, Mod1.b]
-    out: [Mod1.out_assign]
+    name: And1
+    in: [a, b]
+    out: [out_assign]
   - type: and
-    in: [Mod1.a, Mod1.b]
-    out: [Mod1.out_alwaysblock]
+    name: And2
+    in: [a, b]
+    out: [out_alwaysblock]

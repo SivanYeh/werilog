@@ -7,6 +7,8 @@ from werilog.editor.draw_strategy import JumpWireStrategy, SquareWireStrategy, S
 from werilog.editor.extractverilog import VerilogModule, ModuleInstance, Port, Element, Wire, extract_verilog
 from werilog.editor.error_detector import VerilogSyntaxErrorDetector
 
+from werilog.agent.diagram_analyzer import DiagramAnalyzer
+from werilog.agent.data_structure_to_verilog import ds_string_to_verilog
 # --- Config Parsing Helper (Mirroring display.py load_config) ---
 def load_config_yaml():
     config = {}
@@ -966,6 +968,26 @@ class HDLEditorApp(tk.Tk):
                     self.update_hdl_from_state()
                     self.draw_diagram()
 
+    def import_png(self):
+        print("Importing PNG image.")
+        filename = askopenfilename()
+        if not filename:
+            return
+        with DiagramAnalyzer() as analyzer:
+            ds = analyzer.call_agent(
+            image_path=filename,
+            max_new_tokens=8192
+        )
+
+        print(ds)
+        verilog_code = ds_string_to_verilog(ds)
+        
+        # Append to text editor (or overwrite)
+        self.text_editor.delete("1.0", tk.END)
+        self.text_editor.insert(tk.END, verilog_code)
+        
+        # Trigger update of visual view
+        self.on_text_change(None)
     def export_svg(self):
         try:
             import canvasvg

@@ -29,6 +29,13 @@ Key Features:
 
 ## Local Diagram Editor
 The project now includes a local desktop prototype for the Verilog Diagram Editor using Tkinter. 
+
+Before running the editor, you need to configure your environment variables for AI agent features. Copy `.env.example` to `.env` and set a valid Gemini API key (you can get one at [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key)):
+```bash
+cp .env.example .env
+# Edit .env to add your GEMINI_API_KEY
+```
+
 To launch it, simply run:
 ```bash
 uv run python main.py editor
