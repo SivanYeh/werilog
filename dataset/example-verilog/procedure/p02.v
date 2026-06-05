@@ -1,5 +1,5 @@
 // alwaysif
-module Mod1(
+module gt_Mod1(
     input a,
     input b,
     input sel_b1,

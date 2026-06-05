@@ -1,0 +1,27 @@
+type: module
+name: Mod1
+in: 
+  - name: in1
+    bit: 100
+  - name: in2
+    bit: 100
+  - name: sel1
+    bit: 1
+out:
+  - name: out1
+    bit: 100
+op:
+  - type: multiplexer
+    name: Mux1
+    in: [in1, in2, sel1]
+    out: [out1]
+    op:
+      - type: bool
+        in: [in1]
+        out: [0]
+      - type: bool
+        in: [in2]
+        out: [1]
+      - type: selector
+        in: [sel1]
+        out: [out1]

@@ -11,7 +11,7 @@ module Receiver(
     assign result = ~data_in; // Inverts the received signal
 endmodule
 
-module Top_Level (
+module gt_Top_Level (
     output wire final_output
 );
 

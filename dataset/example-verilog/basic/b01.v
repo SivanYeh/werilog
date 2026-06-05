@@ -1,2 +1,2 @@
-module Mod1
+module gt_Mod1;
 endmodule
