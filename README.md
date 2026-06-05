@@ -27,7 +27,15 @@ Key Features:
 - Zero-Setup Simulation: Run iverilog directly in the browser via WebAssembly.
 - AI Agent: Import AI Agent so XPU(eg CPU, GPU, NPU, TPU) design can be semiautomative. (Added on 3/13/2026 after discussion with Prof. Ouhyoung and Prof. Cheng)
 
-References: 
+## Local Diagram Editor
+The project now includes a local desktop prototype for the Verilog Diagram Editor using Tkinter. 
+To launch it, simply run:
+```bash
+uv run python main.py editor
+```
+For more details, see the editor's [README](src/werilog/editor/README.md).
+
+References:
 - for verilog:
 https://github.com/steveicarus/iverilog
 - for assembly:

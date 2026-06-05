@@ -1,0 +1,27 @@
+module:
+  width: "250px"
+  min_height: "150px"
+  background_color: "#2d2d30"
+  border_color: "#555"
+  border_radius: "5px"
+
+submodule:
+  width: "120px"
+  height: "70px"
+  background_color: "#3a3a3d"
+  border_color: "#666"
+
+element:
+  width: "60px"
+  height: "30px"
+  background_color: "#3e3e42"
+  border_color: "#4ec9b0"
+  text_color: "#4ec9b0"
+
+wire:
+  color: "#c586c0"
+  width: 2.5
+
+inference:
+  backend: "huggingface"
+  model: "Qwen/Qwen2.5-Coder-32B-Instruct"

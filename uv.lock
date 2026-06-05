@@ -33,6 +33,12 @@ wheels = [
 ]
 
 [[package]]
+name = "canvasvg"
+version = "1.0.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/9d/f5ab2a9c0784d9de7bc1c35f81813b50c557cf9f7b39dd27747abb6388d8/canvasvg-1.0.5.tar.gz", hash = "sha256:d98d5ff84a511a3bf777b5899cbc8fb780a2bfbbafb54fbb18b49ac5cf2732a8", size = 11609, upload-time = "2017-02-16T10:01:40.243Z" }
+
+[[package]]
 name = "certifi"
 version = "2026.2.25"
 source = { registry = "https://pypi.org/simple" }
@@ -871,9 +877,11 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "google-genai" },
+    { name = "canvasvg" },
     { name = "huggingface-hub" },
     { name = "openai" },
     { name = "python-dotenv" },
+    { name = "requests" },
     { name = "transformers" },
 ]
 
@@ -885,9 +893,11 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "google-genai", specifier = ">=2.6.0" },
+    { name = "canvasvg", specifier = ">=1.0.5" },
     { name = "huggingface-hub", specifier = ">=1.8.0" },
     { name = "openai", specifier = ">=1.0.0" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
+    { name = "requests", specifier = ">=2.34.2" },
     { name = "transformers", specifier = ">=4.30.0" },
 ]
 
