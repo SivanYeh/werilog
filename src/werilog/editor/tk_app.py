@@ -985,8 +985,6 @@ class HDLEditorApp(tk.Tk):
         )
 
         print(ds)
-        # TODO convert `ds` into verilog syntax
-
         verilog_code = ds_string_to_verilog(ds)
         
         # Append to text editor (or overwrite)
