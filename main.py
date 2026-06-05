@@ -28,7 +28,7 @@ def main():
     elif args.command == "webapp":
         print("Launching Verilog WebGL Application on http://127.0.0.1:8000 ...")
         import uvicorn
-        uvicorn.run("werilog.webapp.server:app", host="127.0.0.1", port=8000, reload=True)
+        uvicorn.run("werilog.webapp.server:app", host="127.0.0.1", port=8000, reload=False)
     elif args.command == "agent" or not args.command:
         print("Initializing AI Agent for Verilog Autocomplete (FR5)...")
         agent = VerilogAgent()

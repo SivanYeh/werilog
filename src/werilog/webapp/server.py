@@ -1,14 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import sys
 import os
+import tempfile
+import shutil
 
 from werilog.editor import extractverilog
 from werilog.editor import draw_strategy
 from werilog.agent.core import VerilogAgent
 from werilog.editor.error_detector import VerilogSyntaxErrorDetector
+from werilog.agent.diagram_analyzer import DiagramAnalyzer
+from werilog.agent.data_structure_to_verilog import ds_string_to_verilog
 import traceback
 
 app = FastAPI(title="Verilog WebGL Backend")
@@ -22,7 +26,6 @@ app.add_middleware(
 )
 
 from fastapi.responses import FileResponse
-import os
 
 class ParseRequest(BaseModel):
     code: str
@@ -39,6 +42,30 @@ def clean_sig_name(name):
     if not name:
         return ""
     return name.split('.')[-1]
+
+@app.post("/api/import_png")
+async def import_png(file: UploadFile = File(...)):
+    try:
+        # Save uploaded file temporarily
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            tmp_path = tmp.name
+        
+        with DiagramAnalyzer() as analyzer:
+            ds = analyzer.call_agent(
+                image_path=tmp_path,
+                max_new_tokens=8192
+            )
+            
+        verilog_code = ds_string_to_verilog(ds)
+        
+        # clean up
+        os.remove(tmp_path)
+        
+        return {"verilog_code": verilog_code}
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e)}
 
 @app.post("/api/parse")
 def parse_verilog(req: ParseRequest):

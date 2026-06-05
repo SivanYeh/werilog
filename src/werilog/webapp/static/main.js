@@ -943,6 +943,31 @@ function setupMonaco() {
             reader.onload = (ev) => editor.setValue(ev.target.result);
             reader.readAsText(file);
         });
+
+        document.getElementById('png-upload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            logToUI("[System] Uploading PNG for analysis...");
+            try {
+                const response = await fetch('/api/import_png', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.verilog_code) {
+                    editor.setValue(data.verilog_code);
+                    logToUI("[System] PNG imported successfully.");
+                } else if (data.error) {
+                    logToUI(`[Error] Failed to import PNG: ${data.error}`);
+                }
+            } catch (error) {
+                logToUI(`[Error] Network error while importing PNG: ${error}`);
+            }
+        });
         
         // Load default code
         fetch('verilog/init.v')
