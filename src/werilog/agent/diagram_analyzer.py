@@ -7,7 +7,7 @@ import torch
 import gc
 from io import BytesIO
 from PIL import Image
-from transformers import pipeline
+from transformers import pipeline, BitsAndBytesConfig
 from collections import defaultdict
 import yaml
 
@@ -69,16 +69,31 @@ def visual_json_to_module_dict(
     if not modules:
         raise ValueError("No module elements found.")
 
-    roots = [
-        module_id
-        for module_id, module in modules.items()
-        if module.get("parent") is None
-    ]
-
+    roots = [e for e in elements if e["type"] == "module" and e.get("parent") == "root"]
+    if len(roots) == 0:
+        # Fallback: find all modules that don't have a valid parent module in the list
+        module_ids = {e["id"] for e in elements if e["type"] == "module"}
+        roots = [e for e in elements if e["type"] == "module" and e.get("parent") not in module_ids]
+        if len(roots) > 1:
+            # Create a synthetic root to encapsulate multiple disconnected top-level modules
+            synthetic_root = {
+                "id": "synthetic_root",
+                "type": "module",
+                "label": "SyntheticRoot",
+                "bbox": [0, 0, 1000, 1000],
+                "parent": "root",
+                "confidence": 1.0
+            }
+            for r in roots:
+                r["parent"] = "synthetic_root"
+            elements.append(synthetic_root)
+            modules["synthetic_root"] = synthetic_root
+            roots = [synthetic_root]
+            
     if len(roots) != 1:
         raise ValueError(f"Expected exactly one root module, found {len(roots)}: {roots}")
 
-    root_id = roots[0]
+    root_id = roots[0]["id"]
 
     children_modules: dict[str | None, list[str]] = defaultdict(list)
     child_ports: dict[str, list[str]] = defaultdict(list)
@@ -94,7 +109,9 @@ def visual_json_to_module_dict(
     for port_id, port in ports.items():
         parent = port.get("parent")
         if parent not in modules:
-            raise ValueError(f"Port {port_id!r} has invalid parent {parent!r}")
+            # Fallback for small models that forget to assign a parent: assign to root
+            parent = root_id
+            port["parent"] = root_id
         child_ports[parent].append(port_id)
 
     for ids in children_modules.values():
@@ -367,6 +384,9 @@ def extract_json_object(text: str) -> dict[str, Any]:
     json_text = text[start:end + 1]
     return json.loads(json_text)
 
+
+from mlx_vlm import load, generate
+
 def load_file(file_name: str) -> str:
     file = open(file_name, "r")
     content = file.read()
@@ -375,11 +395,8 @@ def load_file(file_name: str) -> str:
 
 class DiagramAnalyzer:
     def __init__(self):
-        self.pipe = pipeline(
-            "image-text-to-text",
-            model="OpenGVLab/InternVL3-8B-hf",
-            device_map="auto",
-        )
+        # Load the 4-bit quantized MLX 7B model (~4.5GB memory), because 2B is too weak and hallucinates
+        self.model, self.processor = load("mlx-community/Qwen2-VL-7B-Instruct-4bit")
 
     def __enter__(self):
         return self
@@ -388,17 +405,15 @@ class DiagramAnalyzer:
         self.release_agent()
 
     def release_agent(self):
-        if getattr(self, "pipe", None) is not None:
-            pipe = self.pipe
-            self.pipe = None
-            del pipe
+        if getattr(self, "model", None) is not None:
+            model = self.model
+            processor = self.processor
+            self.model = None
+            self.processor = None
+            del model
+            del processor
 
         gc.collect()
-
-        if torch.cuda.is_available():
-            torch.cuda.synchronize()
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
 
     def call_agent(
         self,
@@ -406,24 +421,26 @@ class DiagramAnalyzer:
         max_new_tokens: int = 512,
     ) -> dict[str, Any]:
         
+        from mlx_vlm.prompt_utils import apply_chat_template
+        
         prompt = load_file(os.path.join(os.path.dirname(__file__), "diagram_analyzer_prompt.txt"))
 
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image_url", "image_url": { "url": encode_image(image_path)}},
-                    {"type": "text", "text": prompt},
-                ],
-            }
-        ]
-
-        outputs = self.pipe(
-            text=messages,
-            max_new_tokens=max_new_tokens,
-            return_full_text=False,
+        formatted_prompt = apply_chat_template(
+            self.processor,
+            self.model.config,
+            prompt,
+            num_images=1
         )
 
-        generated_text = outputs[0]["generated_text"]
-        visual_elements = extract_json_object(generated_text)
+        generated_text = generate(
+            self.model, 
+            self.processor, 
+            formatted_prompt, 
+            [image_path], 
+            max_tokens=max_new_tokens,
+            verbose=False
+        )
+
+        print("DEBUG GENERATED TEXT:", generated_text.text)
+        visual_elements = extract_json_object(generated_text.text)
         return visual_json_to_yaml(visual_elements)
